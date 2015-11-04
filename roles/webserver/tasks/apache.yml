@@ -2,6 +2,11 @@
   - name: install apache
     apt: name=apache2 state=present
 
+  - name: Enable mod_rewrite
+    apache2_module: name=rewrite state=present
+    notify:
+      - reload apache
+
   - name: Copy across new virtual host
     template: src=virtual-hosts.conf.j2
               dest=/etc/apache2/sites-available/vagrant.conf
@@ -18,5 +23,19 @@
     file: src=/etc/apache2/sites-available/vagrant.conf
           dest=/etc/apache2/sites-enabled/vagrant.conf
           state=link
+    notify:
+      - reload apache
+
+  - name: Change Apache User to Vagrant
+    lineinfile: dest=/etc/apache2/envvars
+                regexp="^APACHE_RUN_USER=www-data"
+                line="APACHE_RUN_USER=vagrant"
+    notify:
+      - reload apache
+
+  - name: Change Apache Group to Vagrant
+    lineinfile: dest=/etc/apache2/envvars
+                regexp="^APACHE_RUN_GROUP=www-data"
+                line="APACHE_RUN_GROUP=vagrant"
     notify:
       - reload apache

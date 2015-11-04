@@ -1,3 +1,17 @@
 ---
   - name: install php
     apt: name=php5 state=present
+
+  - name: install apache php module
+    apt: name=libapache2-mod-php5 state=present
+
+  - name: install apache php5 mcrypt
+    apt: name=php5-mcrypt state=present
+
+  - name: install php intl module
+    apt: name=php5-intl state=present
+
+  - name: modify the php.ini timezone
+    lineinfile: dest=/etc/php5/apache2/php.ini
+                regexp="^;date.timezone ="
+                line="date.timezone ='America/New_York'"

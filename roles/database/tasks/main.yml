@@ -1,3 +1,6 @@
 ---
   - name: install mysql server
     apt: name=mysql-server state=present
+
+  - name: install phpmysql
+    apt: name=php5-mysql state=present
